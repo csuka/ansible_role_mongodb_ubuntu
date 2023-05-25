@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  author: Kevin Csuka
+  description: Ansible role to setup and configure MongoDB
+  namespace: kcsuka
+  role_name: mongodb_ubuntu
+  license: Apache License, Version 2.0
+  min_ansible_version: 2.9.1
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+  galaxy_tags:
+    - database
+    - mongodb
+    - mongo
+    - cluster
+    - arbiter
+    - system
+    - nosql
+
+dependencies: []

@@ -1,0 +1,104 @@
+---
+- name: install | dependencies
+  apt:
+    name: 
+      - gnupg
+      - python3-dev
+      - python3-pip
+    update_cache: true
+  when: mongo_repo
+
+- name: install | gpg key
+  ansible.builtin.get_url:
+    url: "https://pgp.mongodb.com/server-{{ mongo_version }}.asc"
+    dest: "/etc/apt/keyrings/mongo_{{ mongo_version }}.asc"
+    mode: 0644
+
+- name: install | repo
+  apt_repository:
+    repo: >-
+      deb [
+       arch=amd64,arm64
+       signed-by=/etc/apt/keyrings/mongo_{{- mongo_version }}.asc ]
+      https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongo_version }}
+      multiverse
+    filename: "mongodb-{{ mongo_edition }}-{{ mongo_version }}"
+
+- name: install | group mongodb
+  group:
+    name: mongodb
+    gid: 28
+    system: true
+
+- name: install | user mongodb
+  user:
+    name: mongodb
+    uid: 28
+    system: true
+    group: mongodb
+    comment: 'MongoDB Server'
+    home: "{{ mongo_storage.dbPath }}"
+    create_home: false
+    shell: /sbin/nologin
+  register: set_user
+
+- name: install | mongo edition {{ mongo_edition }}
+  apt:
+    name: mongodb-{{ mongo_edition }}
+
+- name: install | data folder
+  file:
+    state: directory
+    path: "{{ mongo_storage.dbPath }}"
+    mode: 0755
+    owner: mongodb
+    group: mongodb
+
+- name: install | remove default data folder when set differently
+  file:
+    state: absent
+    path: /var/lib/mongodb
+  when: mongo_storage.dbPath != '/var/lib/mongodb'
+
+- name: install | remove log folder when set differently
+  file:
+    state: absent
+    path: /var/log/mongodb
+  when: >-
+    '/var/log/mongodb' not in mongo_systemlog.path or
+    mongo_systemlog.destination != 'file'
+
+- block:
+
+    - name: install | ensure log folder exists
+      file:
+        path: "{{ mongo_systemlog.path | dirname }}"
+        state: directory
+        owner: mongodb
+        group: mongodb
+        mode: '0775'
+
+    - name: install | stat if log file exist
+      stat:
+        path: "{{ mongo_systemlog.path }}"
+      register: mongo_log_check
+
+    - name: install | ensure log files exist
+      copy:
+        content: ""
+        dest: "{{ mongo_systemlog.path }}"
+        force: true
+        group: mongodb
+        owner: mongodb
+        mode: '0755'
+      when: not mongo_log_check.stat.exists
+
+  when: >-
+    '/var/log/mongodb' not in mongo_systemlog.path and
+    mongo_systemlog.destination == 'file'
+
+- name: install | pymongo {{ mongo_pymongo_version }}
+  pip:
+    name: pymongo
+    executable: pip3
+    version: "{{ mongo_pymongo_version }}"
