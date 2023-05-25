@@ -45,6 +45,8 @@ mongo_version: 6.0
 mongo_edition: org  # or enterprise
 ```
 
+So far, Ubuntu 22.04 only supports MongoDB 6.0, and not lower.
+
 ## No log
 
 By default, for security reasons, logging for several tasks is turned off. To turn it on:
