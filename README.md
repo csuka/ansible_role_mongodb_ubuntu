@@ -2,6 +2,8 @@
 
 An Ansible role that installs, configures and manages MongoDB for Ubuntu 22.04.
 
+MongoDB for RHEL-like flavors can [be found here](https://github.com/csuka/ansible_role_mongodb).
+
 **Please read this file carefully before deploying this Ansible role**
 
 ## Functionalities
