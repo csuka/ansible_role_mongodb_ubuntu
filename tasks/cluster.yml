@@ -74,8 +74,8 @@
       template:
         src: mongod_init.conf.j2
         dest: /etc/mongod.conf
-        owner: root
-        group: root
+        owner: mongodb
+        group: mongodb
         mode: 0644
 
     - name: cluster | restart mongo
@@ -107,8 +107,8 @@
       template:
         src: mongod.conf.j2
         dest: /etc/mongod.conf
-        owner: root
-        group: root
+        owner: mongodb
+        group: mongodb
         mode: 0644
 
     - name: cluster | restart mongod service one by one

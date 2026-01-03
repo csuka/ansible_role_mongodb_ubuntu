@@ -25,8 +25,6 @@ mongo_systemlog:
 
 mongo_storage:
   dbPath: /var/lib/mongodb
-  journal:
-    enabled: true
 
 # you should not change the pidfile location
 mongo_processmanagement:

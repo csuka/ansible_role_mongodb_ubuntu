@@ -3,8 +3,8 @@
   template:
     src: mongod_init.conf.j2
     dest: /etc/mongod.conf
-    owner: root
-    group: root
+    owner: mongodb
+    group: mongodb
     mode: 0644
 
 - name: user_init | start mongo
@@ -14,12 +14,13 @@
 
 - name: user_init | create users admin, adminuser and backup
   community.mongodb.mongodb_user:
+    login_host: localhost
+    login_port: "{{ mongo_net.port }}"
+    login_database: admin
     database: admin
     name: "{{ item.name }}"
     password: "{{ item.pass }}"
     roles: "{{ item.role }}"
-    login_host: 127.0.0.1
-    login_port: "{{ mongo_net.port }}"
   no_log: "{{ mongo_no_log }}"
   loop:
     - name: admin

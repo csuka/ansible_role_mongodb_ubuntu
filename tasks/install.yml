@@ -9,18 +9,22 @@
   when: mongo_repo
 
 - name: install | gpg key
-  ansible.builtin.get_url:
-    url: "https://pgp.mongodb.com/server-{{ mongo_version }}.asc"
-    dest: "/etc/apt/keyrings/mongo_{{ mongo_version }}.asc"
-    mode: 0644
+  become: true # use elevation to install mongodb
+  become_method: sudo
+  shell: curl -fsSL https://pgp.mongodb.com/server-{{ mongo_version }}.asc
 
-- name: install | repo
+- name: install | repo url
+  set_fact:
+    repo_url: "https://repo.mongodb.{% if mongo_edition == 'enterprise' %}com{% else %}org{% endif %}/apt/ubuntu"
+
+- name: install | add repo
+  become_method: sudo
   apt_repository:
     repo: >-
       deb [
        arch=amd64,arm64
        signed-by=/etc/apt/keyrings/mongo_{{- mongo_version }}.asc ]
-      https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongo_version }}
+      {{ repo_url }} jammy/mongodb-{{ mongo_edition }}/{{ mongo_version }}
       multiverse
     filename: "mongodb-{{ mongo_edition }}-{{ mongo_version }}"
 
@@ -43,8 +47,10 @@
   register: set_user
 
 - name: install | mongo edition {{ mongo_edition }}
+  become: yes
   apt:
     name: mongodb-{{ mongo_edition }}
+    update_cache: yes
 
 - name: install | data folder
   file:
