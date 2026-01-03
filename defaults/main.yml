@@ -14,9 +14,6 @@ mongo_adminuser_pass: 'change_me'
 
 mongo_no_log: true
 
-# --- defaults for mongod.conf
-# See readme
-
 mongo_net:
   bindIp: 0.0.0.0
   port: 27017
@@ -49,8 +46,6 @@ mongo_auditlog: ''
 mongo_snmp: ''
 
 mongo_custom_cnf: ''
-
-# ---
 
 # when replication is desired, the value should either be
 # primary, secondary or aribter

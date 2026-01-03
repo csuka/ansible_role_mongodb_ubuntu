@@ -42,7 +42,7 @@
     mode: '0644'
   register: set_service_file
 
-- name: thp | reload daemons, because a service file changed
+- name: thp | reload daemons when a service file changed
   systemd:
     daemon_reload: true
   when: set_service_file.changed

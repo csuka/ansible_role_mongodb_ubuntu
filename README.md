@@ -64,7 +64,7 @@ This role includes several configuration recommendations, but not all. There is 
 There are tasks which this role does apply if set, these are:
 
   * Start MongoDB with numactl, set in systemd file
-  * Disabling zone reclaimm
+  * Disabling zone reclaim
   * Disabling transparent hugepages
   * Configure tuned profile
 
@@ -340,7 +340,7 @@ In development.
 
 ### Scaling
 
-Still in development... I am not even sure whenever I'll this functionality, since this is currently not even possible with mongo 5.0.
+Still in development... I am not even sure whenever I'll add this functionality, since this is currently not even possible with mongo 5.0.
 It is not easy to configure scaling in mongo with Ansible, since the method is not straight forward.
 
 So far, I saw that the steps should be:
@@ -349,7 +349,7 @@ So far, I saw that the steps should be:
 - Add new secondary or secondaries
 - Add arbiter if configured
 
-I have tried configuring this countless amount of times, but always failed due to a system error. I decided to not include scaling for now.
+I have tried configuring this countless amount of times, but always failed due to a system error. Therefore, I decided to not include scaling for now.
 
 # Example playbook
 
